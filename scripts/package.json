@@ -1,0 +1,21 @@
+{
+  "name": "csvtoxlsx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "archiver": "^7.0.1",
+    "csvtojson": "^2.0.10",
+    "fast-csv": "^5.0.0",
+    "iconv-lite": "^0.6.3",
+    "prompt-sync": "^4.2.0",
+    "xlsx": "^0.18.5"
+  }
+}
