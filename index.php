@@ -6,6 +6,7 @@
     <input type="submit" value="Upload">
 </form>
 
+<div id="loading" style="display: none;">Aguarde um momento...</div>
 <div id="output-wrapper" style="display: none;">
     <pre id="output"></pre>
 </div>
@@ -16,6 +17,7 @@
     const formUplod = document.querySelector('#upload');
 
     function run() {
+
         const source = new EventSource('stream.php');
 
         source.onmessage = function(e) {
@@ -27,11 +29,6 @@
         source.addEventListener('done', function(e) {
             console.log(e)
             output.textContent += 'Processo terminado!\n';
-            const linkFolder = document.createElement('a');
-            linkFolder.href = 'scripts/files';
-            linkFolder.textContent = 'Clique aqui para acessar os arquivos gerados';
-            linkFolder.target = '_blank';
-            output.appendChild(linkFolder);
             output.scrollTop = output.scrollHeight;
             source.close();
             fetch('download.php')
@@ -56,6 +53,9 @@
 
         formUplod.addEventListener('submit', function(e) {
             e.preventDefault();
+
+            const loadingEl = document.querySelector('#loading');
+            loadingEl.style.display = 'block';
 
             let formData = new FormData();
             let fileInput = document.querySelector('input[type="file"]');
@@ -85,13 +85,14 @@
                 if(!allSuccess) {
                     return;
                 }
+                loadingEl.style.display = 'none';
                 output.textContent += 'Arquivos enviados com sucesso!\n';
 
                 run();
             })
             .catch(error => {
                 console.error('Error:', error);
-            });
+            })
         });
 
     });
