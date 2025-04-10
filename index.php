@@ -51,8 +51,10 @@
 
     document.addEventListener('DOMContentLoaded', function() {
 
+
         formUplod.addEventListener('submit', function(e) {
             e.preventDefault();
+
 
             const loadingEl = document.querySelector('#loading');
             loadingEl.style.display = 'block';
@@ -78,21 +80,25 @@
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log({data})
-                const allSuccess = data.every(item => item.status === 'success');
-                if(!allSuccess) {
-                    return;
+            .then(response => response.text()) // <-- Troque para .text() para debug
+            .then(text => {
+                console.log('Response:', text); // Veja o erro real no console
+                try {
+                    const data = JSON.parse(text); // Tente converter para JSON
+                    const allSuccess = data.every(item => item.status === 'success');
+                    if(!allSuccess) return;
+                    loadingEl.style.display = 'none';
+                    output.textContent += 'Arquivos enviados com sucesso!\n';
+                    setTimeout(() => run(), 300);
+                } catch (e) {
+                    console.error('Erro ao parsear JSON:', e);
+                    output.textContent += 'Erro no servidor (resposta não é JSON)\n';
                 }
-                loadingEl.style.display = 'none';
-                output.textContent += 'Arquivos enviados com sucesso!\n';
-
-                run();
             })
             .catch(error => {
-                console.error('Error:', error);
-            })
+                console.error('Fetch error:', error);
+            });
+
         });
 
     });

@@ -1,8 +1,18 @@
 <?php
 
+// ⚠️ Remove o session_start() se a sessão já estiver ativa
+// Ou use esta verificação:
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Evita qualquer saída anterior ao JSON
+ob_start();
+
+header('Content-Type: application/json');
+
 $dest = './scripts/files/';
 
-# Cria a pasta se não existir
 if (!is_dir($dest)) {
     mkdir($dest, 0777, true);
 }
@@ -29,5 +39,8 @@ if (isset($_FILES['files'])) {
         }
     }
 }
+
+// Limpa qualquer saída que possa ter sido enviada antes
+ob_end_clean();
 
 echo json_encode($response);
